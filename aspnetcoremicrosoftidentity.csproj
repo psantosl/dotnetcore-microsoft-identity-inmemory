@@ -4,7 +4,6 @@
     <UserSecretsId>aspnet-aspnetcoremicrosoftidentity-24793E35-0271-420E-BD36-E98B727C1A53</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <None Update="aspnetcoremicrosoftidentity.db" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
