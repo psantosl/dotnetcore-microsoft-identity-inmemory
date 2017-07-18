@@ -181,22 +181,23 @@ namespace aspnetcoremicrosoftidentity.Controllers
                 _logger.LogInformation(5, "User logged in with {Name} provider.", info.LoginProvider);
                 return RedirectToLocal(returnUrl);
             }
-            if (result.RequiresTwoFactor)
-            {
-                return RedirectToAction(nameof(SendCode), new { ReturnUrl = returnUrl });
-            }
-            if (result.IsLockedOut)
-            {
-                return View("Lockout");
-            }
-            else
-            {
-                // If the user does not have an account, then ask the user to create an account.
-                ViewData["ReturnUrl"] = returnUrl;
-                ViewData["LoginProvider"] = info.LoginProvider;
-                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-                return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = email });
-            }
+
+            // auto create a new account => this we MUST enter some sort
+            // of check to make sure the email is one of the valid ones
+            // we can do this with a list or whatever
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+
+            var user = new ApplicationUser { UserName = email, Email = email };
+
+            await _userManager.CreateAsync(user);
+
+            await _userManager.AddLoginAsync(user, info);
+
+            await _signInManager.SignInAsync(user, isPersistent: false);
+
+            _logger.LogInformation(3, "Microsoft account logged in.");
+
+            return RedirectToLocal(returnUrl);
         }
 
         //
