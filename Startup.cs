@@ -13,6 +13,8 @@ using aspnetcoremicrosoftidentity.Data;
 using aspnetcoremicrosoftidentity.Models;
 using aspnetcoremicrosoftidentity.Services;
 
+using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
+
 namespace aspnetcoremicrosoftidentity
 {
     public class Startup
@@ -76,6 +78,13 @@ namespace aspnetcoremicrosoftidentity
             app.UseIdentity();
 
             // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
+
+            // you better use APP secrets for this
+            app.UseMicrosoftAccountAuthentication(new MicrosoftAccountOptions()
+            {
+                ClientId = "your-app-id",
+                ClientSecret = "your-secret"
+            });
 
             app.UseMvc(routes =>
             {
